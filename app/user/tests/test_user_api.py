@@ -10,8 +10,7 @@ from rest_framework import status
 
 
 CREATE_USER_URL = reverse("user:create")
-TOKEN_URL = reverse("user:token") # this is the URL endpoint
-# that we're going to add for creating tokens in our API.
+TOKEN_URL = reverse("user:token")
 
 
 def create_user(**params):
