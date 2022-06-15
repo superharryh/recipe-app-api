@@ -71,7 +71,6 @@ class PublicUserApiTests(TestCase):
 
     def test_create_token_for_user(self):
         """Test generates token for valid credentials."""
-        #! 1) create a new user:
         user_details = {
             'name': 'Test Name',
             'email': 'test@example.com',
@@ -79,17 +78,12 @@ class PublicUserApiTests(TestCase):
         }
         create_user(**user_details)
 
-        #! 2) generate a payload that has the email address and password:
         payload = {
             'email': user_details['email'],
             'password': user_details['password'],
-        } # this is going to be the payload that sent to the token API in order to log in.
-
-        #! 3) post the payload to the token URL:
+        }
         res = self.client.post(TOKEN_URL, payload)
 
-        #! 4) check that the response result data includes a token and we also check
-        #! that the status code was HTTP_200_OK:
         self.assertIn('token', res.data)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
