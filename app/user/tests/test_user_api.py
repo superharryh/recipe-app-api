@@ -11,7 +11,7 @@ from rest_framework import status
 
 CREATE_USER_URL = reverse("user:create")
 TOKEN_URL = reverse("user:token")
-
+ME_URL = reverse('user:me')
 
 def create_user(**params):
     """Create and return a new user."""
