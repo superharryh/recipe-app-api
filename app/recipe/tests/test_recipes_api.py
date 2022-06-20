@@ -54,7 +54,7 @@ class PrivateRecipeApiTests(TestCase):
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
             'user@example.com',
-            'testpass123',
+            'testpass123123',
         )
         self.client.force_authenticate(self.user)
 
