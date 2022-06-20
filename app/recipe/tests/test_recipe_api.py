@@ -111,3 +111,24 @@ class PrivateRecipeApiTests(TestCase):
         # 4) pass in the recipe that we created to the sterilizer:
         serializer = RecipeDetailSerializer(recipe)
         self.assertEqual(res.data, serializer.data)
+
+    def test_create_recipe(self):
+        """Test creating a recipe."""
+        payload = {
+            'title': 'Sample recipe',
+            'time_minutes': 30,
+            'price': Decimal('5.99'),
+        }
+        res = self.client.post(RECIPES_URL, payload)  # api/recipes/recipe
+
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+
+        # getting just created recipe by its id:
+        recipe = Recipe.objects.get(id=res.data['id'])
+        # and checking if the recipe's payload's key and value are matching:
+        for k, v in payload.items():
+            self.assertEqual(getattr(recipe, k), v)
+
+        # check that the user that's assigned to the API \
+        # matches the user we're authenticated with:
+        self.assertEqual(recipe.user, self.user)
