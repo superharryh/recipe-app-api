@@ -12,10 +12,18 @@ from rest_framework.test import APIClient
 
 from core.models import Recipe
 
-from recipe.serializers import RecipeSerializer
+from recipe.serializers import (
+    RecipeSerializer,
+    RecipeDetailSerializer,)
 
 
 RECIPES_URL = reverse('recipe:recipe-list')
+
+
+def detail_url(recipe_id):
+    """Create and return a recipe detail URL."""
+    return reverse('recipe:recipe-detail', args=[recipe_id])
+    # is used to generate a unique URL for a specific recipe's detail endpoint.
 
 
 def create_recipe(user, **params):
@@ -84,6 +92,22 @@ class PrivateRecipeApiTests(TestCase):
         res = self.client.get(RECIPES_URL)
 
         recipes = Recipe.objects.filter(user=self.user)
-        serializer = RecipeSerializer(recipes, many=True)
+        serializer = RecipeSerializer(recipes, many=True)  # list of recipes
         self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data, serializer.data)
+
+    def test_get_recipe_detail(self):
+        """Test get recipe detail."""
+        # 1) create a sample recipe, assign it to the user \
+        # that we use for authentication:
+        recipe = create_recipe(user=self.user)
+
+        # 2) create a detail URL using the id of that recipe:
+        url = detail_url(recipe.id)
+
+        # 3) call the client.get method to call the URL:
+        res = self.client.get(url)
+
+        # 4) pass in the recipe that we created to the sterilizer:
+        serializer = RecipeDetailSerializer(recipe)
         self.assertEqual(res.data, serializer.data)
